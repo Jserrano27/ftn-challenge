@@ -26,7 +26,7 @@ export default {
         throw new AuthenticationError('Invalid credentials');
       }
 
-      const token = jwt.sign({ id: user.id }, 'riddlemethis', { expiresIn: 24 * 10 * 50 });
+      const token = jwt.sign({ id: user.id }, 'h4%4j1Qp8)_R8m', { expiresIn: 24 * 10 * 50 });
 
       return {
         token,

@@ -4,6 +4,7 @@ export default gql`
   type User {
     id: ID!
     name: String!
+    email: String!
     tasks: [Task!]!
   }
 

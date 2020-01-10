@@ -22,7 +22,7 @@ const getUser = async (req) => {
 
   if (token) {
     try {
-      return await jwt.verify(token, 'riddlemethis');
+      return await jwt.verify(token, 'h4%4j1Qp8)_R8m');
     } catch (e) {
       throw new AuthenticationError('Your session expired. Sign in again.');
     }
