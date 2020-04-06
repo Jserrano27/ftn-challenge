@@ -1,0 +1,6 @@
+{
+  "presets": ["babel-preset-expo"],
+  "plugins": [
+    ["relay", {"compat": true, "schema": "./schema.json", "debug": true}]
+  ]
+}
