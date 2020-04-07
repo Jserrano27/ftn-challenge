@@ -58,6 +58,9 @@ export default function Login() {
         AsyncStorage.setItem('@StickNotes-auth', response.login.auth.toString());
         AsyncStorage.setItem('@StickNotes-userName', response.login.name);
 
+        setEmail('');
+        setPassword('');
+
         navigation.navigate('TaskList', { userName: response.login.name });
       },
       onError: err => {

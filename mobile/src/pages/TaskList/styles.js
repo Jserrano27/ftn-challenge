@@ -39,6 +39,20 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%'
   },
+  // Log Out
+
+  logOutContainer: {
+    position: 'absolute',
+    top: 40,
+    right: 14,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },  
+
+  logOutText: {
+    color: '#33334F',
+    fontSize: 12
+  },
 
   // Floating NewTask Button
 

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Keyboard, Alert, AsyncStorage } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { QueryRenderer, graphql, fetchQuery } from 'react-relay';
+import { Feather } from '@expo/vector-icons';
+
 import environment from '../../environment';
 
 import styles from './styles';
@@ -25,6 +27,15 @@ export default function TaskList({ route }) {
     };
   }, [route.params]);
   
+  const query = graphql`
+    query TaskListQuery {
+      tasks{
+        id,
+        title,
+        description
+      }
+    }
+  `;
 
   async function refreshFunction() {
     try {
@@ -40,21 +51,30 @@ export default function TaskList({ route }) {
     navigation.navigate('NewTask');
   };
  
-  const query = graphql`
-    query TaskListQuery {
-      tasks{
-        id,
-        title,
-        description
-      }
-    }
-  `;
+  function handleLogOut() {
+    Alert.alert('Do you want to log out?', "", [
+      {text: 'Yes', onPress: () => {
+        // Start Log Out
+        AsyncStorage.removeItem('@StickNotes-token');
+        AsyncStorage.removeItem('@StickNotes-auth');
+        AsyncStorage.removeItem('@StickNotes-userName');
 
+        navigation.navigate('Login');
+        // End Log Out
+      }},
+      {text: "No", onPress: () => {return}}
+    ],
+    {cancelable: false});
+  };
   
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <Text style={styles.title}>Hello, {userName}</Text>
+        <TouchableOpacity style={styles.logOutContainer} onPress={handleLogOut} activeOpacity={1}>
+          <Feather name="log-out" size={28} color="#33334F"/>
+          <Text style={styles.logOutText}>Log out</Text>
+        </TouchableOpacity>
         <Text style={styles.subtitle}>Check your tasks 👇</Text>
 
         <TextInput 
