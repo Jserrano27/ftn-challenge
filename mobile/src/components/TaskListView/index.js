@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, RefreshControl } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { fetchQuery, graphql, commitMutation } from 'react-relay';
+import { useNavigation } from '@react-navigation/native';
 
 import environment from '../../environment';
 
@@ -10,6 +11,7 @@ import styles from './styles';
 export default function TaskListView( { tasks } ) {
   const [taskList, setTaskList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const navigation = useNavigation();
 
   
   useEffect(() => {
@@ -75,7 +77,7 @@ export default function TaskListView( { tasks } ) {
           data={taskList}
           keyExtractor={item => item.id}
           renderItem={({ item: task }) => (
-            <TouchableOpacity style={styles.task} activeOpacity={1}>
+            <TouchableOpacity style={styles.task} activeOpacity={1} onPress={() => navigation.navigate('Task', [ task.title, task.description ])}>
               <Text style={styles.taskTitle}>{task.title}</Text>
               <Text
                 style={styles.taskDescription}
