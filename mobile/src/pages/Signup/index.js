@@ -33,9 +33,25 @@ export default function Signup() {
   };
 
   function handleSignup() {
+    // All fields required
     if(!name || !email || !password){
       Alert.alert('FlyNotes', 'Please, fill all the fields', {text: 'Got it'});
+      return;
     };
+
+    // E-mail validation
+    const regexp = re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(!regexp.test(String(email))) {
+      Alert.alert('FlyNotes', 'Provide a valide e-mail', {text: 'Got it'});
+      return;
+    }
+
+    // Password validation
+    if(password.length < 4) {
+      Alert.alert('FlyNotes', 'The password should have at least 4 characters', {text: 'Got it'});
+      return;
+    }
+
 
     const mutation = graphql`
       mutation SignupMutation($name: String!, $email: String!, $password: String! ) {
@@ -98,7 +114,7 @@ export default function Signup() {
             onSubmitEditing={focusPassword}
             underlineColorAndroid="transparent"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={email => setEmail(email.toLowerCase())}
             returnKeyType="next"
             ref={emailRef}
           />
