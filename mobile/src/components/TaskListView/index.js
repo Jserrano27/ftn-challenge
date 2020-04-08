@@ -1,5 +1,5 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, RefreshControl, Alert } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { fetchQuery, graphql, commitMutation } from 'react-relay';
 import { useNavigation } from '@react-navigation/native';
@@ -60,7 +60,8 @@ export default TaskListView = forwardRef((props, ref) => {
       setRefreshing(false);
     } catch(e) {
       console.log(e);
-      alert('Ops! Something went wrong. Try again.');
+      Alert.alert('FlyNotes', 'Ops! Something went wrong. Try again.', [{text: 'Got it'}]);
+      setRefreshing(false);
     }
   };
   
@@ -77,7 +78,7 @@ export default TaskListView = forwardRef((props, ref) => {
     commitMutation(environment, {mutation, variables: { id }, 
       onCompleted: (response, error) => {
         if (error) {
-          alert(error[0].message);
+          Alert.alert('FlyNotes', `${error[0].message}`, [{text: 'Got it'}]);
           return;
         }
         console.log(`Task with id ${id} deleted`);
@@ -86,7 +87,7 @@ export default TaskListView = forwardRef((props, ref) => {
         if(taskList.length === 1) onRefresh();
       },
       onError: err => {
-        alert('Ops! Something went wrong. Try again.');
+        Alert.alert('FlyNotes', 'Ops! Something went wrong. Try again.', [{text: 'Got it'}]);
         console.log(err.source);
       }
     });

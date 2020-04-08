@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, AsyncStorage} from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, AsyncStorage, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { commitMutation, graphql } from 'react-relay';
 import environment from '../../environment';
@@ -34,7 +34,7 @@ export default function Login() {
   function handleLogin() {
 
     if (!email || !password) {
-      alert('Enter your email and password.');
+      Alert.alert('FlyNotes', 'You must fill both fields', {text: 'Got it'});
       return;
     }
 
@@ -51,7 +51,7 @@ export default function Login() {
     commitMutation(environment, {mutation, variables: {email, password}, 
       onCompleted: (response, error) => {
         if (error) {
-          alert(error[0].message);
+          Alert.alert('FlyNotes', `${error[0].message}`, [{text: 'Got it'}]);
           return;
         }
         AsyncStorage.setItem('@StickNotes-token', response.login.token);
@@ -65,9 +65,9 @@ export default function Login() {
       },
       onError: err => {
         if (err.source && err.source.errors[0].extensions.code === 'UNAUTHENTICATED') {
-          alert('Wrong email or password.')
+          Alert.alert('FlyNotes', 'Wrong email or password.', [{text: 'Got it'}]);
         } else {
-          alert('Ops! Something went wrong. Try again.');
+          Alert.alert('FlyNotes', 'Ops! Something went wrong. Try again.', [{text: 'Got it'}]);
         }
         console.log(err.source);
       }

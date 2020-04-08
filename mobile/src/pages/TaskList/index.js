@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Keyboard, Alert, AsyncStorage } from 'react-native';
+import { Text, View, Image, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Keyboard, Alert, AsyncStorage } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SearchBar } from 'react-native-elements';
 import { QueryRenderer, graphql, fetchQuery } from 'react-relay';
@@ -43,7 +43,7 @@ export default function TaskList({ route }) {
       await fetchQuery(environment, query);
     } catch(e) {
       console.log(e);
-      alert('Ops! Something went wrong. Try again.');
+      Alert.alert('FlyNotes', 'Ops! Something went wrong. Try again.', [{text: 'Got it'}]);
     }
   };
 
@@ -57,7 +57,7 @@ export default function TaskList({ route }) {
   };
  
   function handleLogOut() {
-    Alert.alert('Do you want to log out?', "", [
+    Alert.alert('FlyNotes', 'Do you want to log out?', [
       {text: 'Yes', onPress: () => {
         // Start Log Out
         AsyncStorage.removeItem('@StickNotes-token');

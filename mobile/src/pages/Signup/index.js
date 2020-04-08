@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard} from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { commitMutation, graphql } from 'react-relay';
 import environment from '../../environment';
@@ -34,7 +34,7 @@ export default function Signup() {
 
   function handleSignup() {
     if(!name || !email || !password){
-      alert('Please, fill all the fields');
+      Alert.alert('FlyNotes', 'Please, fill all the fields', {text: 'Got it'});
     };
 
     const mutation = graphql`
@@ -48,14 +48,14 @@ export default function Signup() {
     commitMutation(environment, {mutation, variables: {name, email, password}, 
       onCompleted: (response, error) => {
         if (error) {
-          alert(error[0].message);
+          Alert.alert('FlyNotes', `${error[0].message}`, [{text: 'Got it'}]);
           return;
         }
-        alert(`Congratulations ${name}, your account has been created! Please, log in.`)
+        Alert.alert('FlyNotes', `Congratulations ${name}, your account has been created! Please, log in.`, {text: 'Ok'});
         navigation.navigate('Login');
       },
       onError: err => {
-        alert('Ops! Something went wrong. Try again.');
+        Alert.alert('FlyNotes', 'Ops! Something went wrong. Try again.', {text: 'Got it'});
         console.log(err.source);
       }
     });

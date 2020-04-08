@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, TouchableOpacity, Alert } from 'react-native';
 import { commitMutation, graphql } from 'react-relay';
 import { useNavigation } from '@react-navigation/native'
 
@@ -16,7 +16,7 @@ export default function NewTask() {
 
   function createTask() {
     if (!title || !description) {
-      alert('You must fill both title and description');
+      Alert.alert('FlyNotes', 'You must fill both title and description', [{text: 'Got it'}]);
       return
     }
 
@@ -31,12 +31,12 @@ export default function NewTask() {
     commitMutation(environment, {mutation, variables: { title, description }, 
       onCompleted: (response, error) => {
         if(error) {
-          alert(error[0].message);
+          Alert.alert('FlyNotes', `${error[0].message}`, [{text: 'Got it'}]);
         }
         navigation.navigate('TaskList', { refresh: true });
       },
       onError: err => {
-        alert('Ops! Something went wrong. Try again.');
+        Alert.alert('FlyNotes', 'Ops! Something went wrong. Try again.', [{text: 'Got it'}]);
         console.log(err);
       }
     });
