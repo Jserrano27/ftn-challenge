@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import { Text, View, Image, TextInput, TouchableOpacity, ActivityIndicator, TouchableWithoutFeedback, Keyboard, Alert, AsyncStorage } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { SearchBar } from 'react-native-elements';
 import { QueryRenderer, graphql, fetchQuery } from 'react-relay';
 import { Feather } from '@expo/vector-icons';
 
@@ -15,9 +16,9 @@ import NoTasksView from '../../components/NoTasksView';
 import newTaskIcon from '../../assets/img-newTask.png'
 
 export default function TaskList({ route }) {
-  const [taskList, setTaskList] = useState([]);
   const [searchText, setSearchText] = useState("");
   const navigation = useNavigation();
+  const taskListViewRef = createRef();
   
   const {userName} = route.params;
 
@@ -39,8 +40,7 @@ export default function TaskList({ route }) {
 
   async function refreshFunction() {
     try {
-      const response = await fetchQuery(environment, query);
-      setTaskList(response.tasks);
+      await fetchQuery(environment, query);
     } catch(e) {
       console.log(e);
       alert('Ops! Something went wrong. Try again.');
@@ -49,6 +49,11 @@ export default function TaskList({ route }) {
 
   function goToNewTask() {
     navigation.navigate('NewTask');
+  };
+
+  function handleSearch(val) {
+    setSearchText(val);
+    taskListViewRef.current.showResults(val);
   };
  
   function handleLogOut() {
@@ -77,18 +82,18 @@ export default function TaskList({ route }) {
         </TouchableOpacity>
         <Text style={styles.subtitle}>Check your tasks 👇</Text>
 
-        <TextInput 
-          style={styles.input}
+        <SearchBar 
+          containerStyle={styles.searchContainer} 
+          inputContainerStyle={styles.searchInputContainer} 
+          inputStyle={styles.searchInput}    
+          lightTheme
+          platform="ios"
           placeholder="search..."
-          placeholderTextColor="#BCBCBC"
           selectionColor="#1EB36B"
-          autoCapitalize="none"
-          autoCorrect={false}
-          underlineColorAndroid="transparent"
+          onChangeText={value => handleSearch(value)}
           value={searchText}
-          onChangeText={setSearchText}
           returnKeyType="search"
-          />
+        />
 
         <TouchableOpacity
           style={styles.circleShape}
@@ -115,9 +120,8 @@ export default function TaskList({ route }) {
                     <NoTasksView goToNewTask={goToNewTask}/>
                     )
                   } else {
-                    setTaskList(props.tasks);
-                    // List of tasks in case of success
-                    return (<TaskListView {...props}/>)
+                    // Render list of tasks in case of success
+                    return (<TaskListView {...props}  ref={taskListViewRef} />)
                   }
                 }
                 // Render Loader while fetching

@@ -23,27 +23,35 @@ const styles = StyleSheet.create({
     marginTop: 5
   },
 
-  input: {
-    marginHorizontal: 14,
-    height: 55,
+  // SearchBar
+
+  // Container of Searchbar
+  searchContainer: {
+    marginHorizontal: 5,
     borderRadius: 5,
-    fontSize: 18,
-    fontWeight: '600',
-    backgroundColor: '#EEEEEE',
-    paddingHorizontal: 20,
-    marginVertical: 20
+    marginVertical: 20,
+    backgroundColor: '#fff',
+    },
+
+  // Container of the TextInput
+  searchInputContainer: {
+    height: 45,
+    backgroundColor: '#EEEEEE'
   },
+
+  // End SearchBar
 
   taskListContainer: {
     paddingHorizontal: 14,
     flex: 1,
     width: '100%'
   },
+
   // Log Out
 
   logOutContainer: {
     position: 'absolute',
-    top: 40,
+    top: Constants.statusBarHeight + 20,
     right: 14,
     alignItems: 'center',
     justifyContent: 'center'

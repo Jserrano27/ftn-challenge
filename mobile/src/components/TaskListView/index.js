@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { View, Text, TouchableOpacity, RefreshControl } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { fetchQuery, graphql, commitMutation } from 'react-relay';
@@ -8,16 +8,38 @@ import environment from '../../environment';
 
 import styles from './styles';
 
-export default function TaskListView( { tasks } ) {
+
+export default TaskListView = forwardRef((props, ref) => {
   const [taskList, setTaskList] = useState([]);
+  const [taskListOriginal, setTaskListOriginal] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   
   useEffect(() => {
     
-    setTaskList(tasks);
-  }, [tasks]);
+    setTaskList(props.tasks);
+
+    // For reseting the taskList with original values after clearing the search
+    setTaskListOriginal(props.tasks);
+  }, [props.tasks]);
+
+  useImperativeHandle(ref, () => ({
+   
+    showResults(searchText) {
+      // Filter from the original task list
+      const newData = taskListOriginal.filter(item => {
+        const taskData = `${item.title.toUpperCase()} ${item.description.toUpperCase()}`;
+        
+        const inputData = searchText.toUpperCase();
+        
+        // If inputData is not present on taskData, don't return it
+        return taskData.indexOf(inputData) !== -1;
+      });
+      
+      setTaskList(newData);
+    }
+  }));
 
   async function onRefresh() {
     setRefreshing(true);
@@ -106,4 +128,4 @@ export default function TaskListView( { tasks } ) {
         />
       </View>
   )
-}
+});
